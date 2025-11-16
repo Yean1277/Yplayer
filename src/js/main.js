@@ -1,34 +1,19 @@
 document.addEventListener('DOMContentLoaded', () => {
     // --- 1. Define Data ---
     const playlist = [
-        {
-            title: "SoundHelix Song 1",
-            artist: "T. Schürger",
-            src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
-            art: "https://placehold.co/150x150/E1468C/ffffff?text=Song+1",
-            lyrics: "Just a simple song\nLa la la, oh yeah\nMusic is the key\n\n(Verse 1)\nFeeling the beat now\nDancing on my feet now\nOh yeah, oh yeah\n\n(Chorus)\nSoundHelix, take me away\nMake me happy, every day\nSoundHelix, take me away\nMake me happy, every day"
-        },
-        {
-            title: "SoundHelix Song 2",
-            artist: "T. Schürger",
-            src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
-            art: "https://placehold.co/150x150/D14999/ffffff?text=Song+2",
-            lyrics: "Another melody\nSweet harmony\n\n(Verse 1)\nPlaying all night long\nThis is where I belong\n\n(Chorus)\nSing it loud, sing it strong\nWith this SoundHelix song\nSing it loud, sing it strong\nWith this SoundHelix song"
-        },
-        {
-            title: "SoundHelix Song 3",
-            artist: "T. Schürger",
-            src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3",
-            art: "https://placehold.co/150x150/A14CB0/ffffff?text=Song+3",
-            lyrics: "No lyrics available for this song. Please select a song with lyrics to use the Deep Dive feature."
-        },
-        {
-            title: "SoundHelix Song 4",
-            artist: "T. Schürger",
-            src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3",
-            art: "https://placehold.co/150x150/9F56C5/ffffff?text=Song+4",
-            lyrics: "Rockin' to the rhythm\n\n(Verse 1)\nGot that digital sound\nBest that I have found\n\n(Chorus)\nOne, two, three, four\nMusic's what I live for\nOne, two, three, four\nMusic's what I live for"
-        }
+        /*
+        *
+        *  EXAMPLE SONG OBJECT STRUCTURE
+        * 
+        *
+        */
+        // {
+        //     title: "SoundHelix Song 1",
+        //     artist: "T. Schürger",
+        //     src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+        //     art: "https://placehold.co/150x150/E1468C/ffffff?text=Song+1",
+        //     lyrics: "Just a simple song\nLa la la, oh yeah\nMusic is the key\n\n(Verse 1)\nFeeling the beat now\nDancing on my feet now\nOh yeah, oh yeah\n\n(Chorus)\nSoundHelix, take me away\nMake me happy, every day\nSoundHelix, take me away\nMake me happy, every day"
+        // },
     ];
 
     let currentSongIndex = 0;
@@ -293,30 +278,6 @@ document.addEventListener('DOMContentLoaded', () => {
             nextSong();
         }
     });
-
-
-    // --- 5. Playlist Visibility Logic (REMOVED) ---
-
-    // function togglePlaylistVisibility() {
-    //     isPlaylistContentVisible = !isPlaylistContentVisible;
-
-    //     if (isPlaylistContentVisible) {
-    //         // Show Playlist
-    //         musicPlayer.classList.remove('playlist-content-hidden');
-    //         playlistContainer.classList.remove('hidden');
-    //         togglePlaylistBtn.title = "Hide Playlist";
-    //         // Icon for "Hide" (list with X)
-    //         togglePlaylistBtn.querySelector('svg path').setAttribute('d', 'M4 10h12v2H4zm0-4h12v2H4zm0 8h8v2H4zM18 14v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4z');
-    //     } else {
-    //         // Hide Playlist
-    //         musicPlayer.classList.add('playlist-content-hidden');
-    //         playlistContainer.classList.add('hidden');
-    //         togglePlaylistBtn.title = "Show Playlist";
-    //         // Icon for "Show" (just the list)
-    //         togglePlaylistBtn.querySelector('svg path').setAttribute('d', 'M4 10h12v2H4zm0-4h12v2H4zm0 8h8v2H4zM18 10h-2v4h2v-4zM20 10h2v4h-2v-4z');
-    //     }
-    // }
-
 
     // --- 6. Gemini API Functions (Stub) ---
     // ... (rest of the functions remain the same) ...
