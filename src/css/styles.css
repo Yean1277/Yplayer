@@ -356,7 +356,45 @@ input[type="range"]::-moz-range-thumb:hover {
     overflow-y: auto;
     scrollbar-width: thin;
     scrollbar-color: #EED8E0 #FDEFF5;
-    border-top: 1px solid #EED8E0;
+    /* Soft boxed style so playlist looks like its own card */
+    background-color: #FEFBFD;
+    border: 1px solid #EED8E0;
+    border-radius: 12px;
+}
+
+/* Upload / drop area styles */
+.upload-area {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.drop-zone {
+    border: 2px dashed #EED8E0;
+    border-radius: 8px;
+    padding: 12px;
+    text-align: center;
+    color: #8B6373;
+    background: rgba(255,255,255,0.6);
+}
+
+.drop-zone.drag-over {
+    background: #FDEFF5;
+    border-color: #E1468C;
+    color: #4D2C3A;
+}
+
+#upload-btn.control-btn {
+    align-self: flex-start;
+    padding: 8px 12px;
+    border-radius: 8px;
+    background-color: #E1468C;
+    color: #fff;
+}
+
+#playlist-items {
+    display: block;
 }
 
 .lyrics-container {
@@ -374,11 +412,11 @@ input[type="range"]::-moz-range-thumb:hover {
     flex-direction: column;
     gap: 15px;
 
-    /* BOX STYLING (Always visible, separate box) */
-    background-color: #FEFBFD;
-    border: 1px solid #EED8E0;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    /* Minimal styling for lyrics: remove boxed appearance so it blends with player */
+    background-color: transparent;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
 }
 
 #deep-dive-btn {
@@ -396,6 +434,58 @@ input[type="range"]::-moz-range-thumb:hover {
 
 #deep-dive-btn:hover {
     background-color: #EED8E0;
+}
+
+/* --- 9. Desktop / wide-screen layout: move playlist to left of the player --- */
+@media (min-width: 800px) {
+    .music-player {
+        /* switch to row layout on wide screens */
+        flex-direction: row;
+        gap: 20px;
+        align-items: flex-start;
+        max-width: 1200px;
+    }
+
+    /* Left area contains playlist as a separate column; player sits center-left */
+    .player-left-col {
+        display: flex;
+        flex-direction: column;
+        width: 44%;
+        min-height: 320px;
+        background-color: #F9D5E5;
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid #EED8E0;
+    }
+
+    /* Playlist is its own left column */
+    #playlist-container {
+        width: 28%;
+        padding: 12px;
+        max-height: calc(100vh - 160px);
+        overflow-y: auto;
+        background: #FEFBFD;
+    }
+
+    /* Player controls area occupies remaining space inside player-left-col */
+    .player-main {
+        width: 100%;
+        padding: 24px;
+    }
+
+    /* Place the lyrics to the right as a slim column (optional) */
+    .lyrics-container {
+        width: 28%;
+        max-height: calc(100vh - 160px);
+        overflow-y: auto;
+        padding: 24px;
+        text-align: left;
+    }
+
+    /* Slight visual tweak for playlist items on desktop */
+    .playlist-item {
+        padding: 12px 10px;
+    }
 }
 
 #current-lyrics-text {
@@ -533,9 +623,21 @@ input[type="range"]::-moz-range-thumb:hover {
         /* Fixed wrapper height to align boxes */
     }
 
-    /* LEFT BOX (Player + Playlist) */
+    /* LEFT BOX (Playlist) */
+    #playlist-container {
+        /* CHANGED: From 300px to 340px */
+        flex-basis: 340px; 
+        flex-shrink: 0;
+        height: 100%;
+        max-height: none;
+        /* ENSURE visibility is not overridden by mobile styles */
+        display: block !important; 
+    }
+
+    /* MIDDLE BOX (Player) */
     .player-left-col {
-        flex-basis: 450px;
+        /* Adjusted basis to accommodate wider playlist */
+        flex-basis: 320px; 
         flex-shrink: 0;
         transition: flex-basis 0.3s ease;
         height: 100%;
@@ -548,25 +650,5 @@ input[type="range"]::-moz-range-thumb:hover {
         max-height: none;
         height: 100%;
         display: flex;
-    }
-
-    #playlist-container {
-        max-height: none;
-        flex-grow: 1;
-    }
-
-    /* Collapsed state: Playlist content is hidden */
-    .music-player.playlist-content-hidden .player-left-col {
-        flex-basis: 320px;
-        /* Narrower, only room for controls */
-    }
-
-    .music-player.playlist-content-hidden #playlist-container {
-        display: none !important;
-    }
-
-    /* Make sure the player-left-col's border radius is maintained */
-    .music-player.playlist-content-hidden .player-left-col {
-        border-radius: 12px;
     }
 }

@@ -1,4 +1,3 @@
-
 document.addEventListener('DOMContentLoaded', () => {
     // --- 1. Define Data ---
     const playlist = [
@@ -39,8 +38,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Loop State: 'none', 'song', 'playlist'
     let loopMode = 'none';
 
-    // Playlist Content Visibility State 
-    let isPlaylistContentVisible = true;
+    // REMOVED: Playlist Content Visibility State 
+    // let isPlaylistContentVisible = true;
 
     // --- 2. Get DOM Element References ---
     const audioPlayer = document.getElementById('audio-player');
@@ -65,10 +64,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Playlist & Lyrics Elements
     const playlistContainer = document.getElementById('playlist-container');
+    // Container that will hold rendered list items (we added this in HTML)
+    const playlistItems = document.getElementById('playlist-items');
     const currentLyricsText = document.getElementById('current-lyrics-text');
 
-    // Toggle Button
-    const togglePlaylistBtn = document.getElementById('toggle-playlist-btn');
+    // Upload / Drop elements
+    const fileInput = document.getElementById('file-input');
+    const dropZone = document.getElementById('drop-zone');
+    const uploadBtn = document.getElementById('upload-btn');
+
+    // REMOVED: Toggle Button reference
+    // const togglePlaylistBtn = document.getElementById('toggle-playlist-btn');
     const musicPlayer = document.querySelector('.music-player');
 
     // AI Modal Elements
@@ -182,10 +188,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function renderPlaylist() {
-        playlistContainer.innerHTML = '';
+        if (!playlistItems) return;
+        playlistItems.innerHTML = '';
         playlist.forEach((song, index) => {
             const item = document.createElement('div');
             item.className = 'playlist-item';
+            item.dataset.index = index;
             item.innerHTML = `
                         <div>
                             <p class="song-title-pl">${song.title}</p>
@@ -197,7 +205,42 @@ document.addEventListener('DOMContentLoaded', () => {
                 loadSong(index, true);
             });
 
-            playlistContainer.appendChild(item);
+            playlistItems.appendChild(item);
+        });
+        // Update active state after rendering
+        updateActivePlaylistItem(currentSongIndex);
+    }
+
+    // Handle files (FileList or array of File objects)
+    function handleFiles(fileList) {
+        if (!fileList || fileList.length === 0) return;
+
+        // Convert FileList to array for easier handling
+        const files = Array.from(fileList);
+
+        files.forEach((file, i) => {
+            if (!file.type.startsWith('audio')) return; // skip non-audio
+
+            const url = URL.createObjectURL(file);
+            const name = file.name.replace(/\.[^/.]+$/, "");
+            const newSong = {
+                title: name,
+                artist: 'Local file',
+                src: url,
+                art: 'https://placehold.co/150x150/E1468C/ffffff?text=Local',
+                lyrics: 'No lyrics available for this song.'
+            };
+
+            playlist.push(newSong);
+
+            // If this is the first file added in this batch, auto-play it
+            if (i === 0) {
+                const newIndex = playlist.length - 1;
+                renderPlaylist();
+                loadSong(newIndex, true);
+            } else {
+                renderPlaylist();
+            }
         });
     }
 
@@ -252,30 +295,31 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
 
-    // --- 5. Playlist Visibility Logic (UPDATED) ---
+    // --- 5. Playlist Visibility Logic (REMOVED) ---
 
-    function togglePlaylistVisibility() {
-        isPlaylistContentVisible = !isPlaylistContentVisible;
+    // function togglePlaylistVisibility() {
+    //     isPlaylistContentVisible = !isPlaylistContentVisible;
 
-        if (isPlaylistContentVisible) {
-            // Show Playlist
-            musicPlayer.classList.remove('playlist-content-hidden');
-            playlistContainer.classList.remove('hidden');
-            togglePlaylistBtn.title = "Hide Playlist";
-            // Icon for "Hide" (list with X)
-            togglePlaylistBtn.querySelector('svg path').setAttribute('d', 'M4 10h12v2H4zm0-4h12v2H4zm0 8h8v2H4zM18 14v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4z');
-        } else {
-            // Hide Playlist
-            musicPlayer.classList.add('playlist-content-hidden');
-            playlistContainer.classList.add('hidden');
-            togglePlaylistBtn.title = "Show Playlist";
-            // Icon for "Show" (just the list)
-            togglePlaylistBtn.querySelector('svg path').setAttribute('d', 'M4 10h12v2H4zm0-4h12v2H4zm0 8h8v2H4zM18 10h-2v4h2v-4zM20 10h2v4h-2v-4z');
-        }
-    }
+    //     if (isPlaylistContentVisible) {
+    //         // Show Playlist
+    //         musicPlayer.classList.remove('playlist-content-hidden');
+    //         playlistContainer.classList.remove('hidden');
+    //         togglePlaylistBtn.title = "Hide Playlist";
+    //         // Icon for "Hide" (list with X)
+    //         togglePlaylistBtn.querySelector('svg path').setAttribute('d', 'M4 10h12v2H4zm0-4h12v2H4zm0 8h8v2H4zM18 14v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4z');
+    //     } else {
+    //         // Hide Playlist
+    //         musicPlayer.classList.add('playlist-content-hidden');
+    //         playlistContainer.classList.add('hidden');
+    //         togglePlaylistBtn.title = "Show Playlist";
+    //         // Icon for "Show" (just the list)
+    //         togglePlaylistBtn.querySelector('svg path').setAttribute('d', 'M4 10h12v2H4zm0-4h12v2H4zm0 8h8v2H4zM18 10h-2v4h2v-4zM20 10h2v4h-2v-4z');
+    //     }
+    // }
 
 
     // --- 6. Gemini API Functions (Stub) ---
+    // ... (rest of the functions remain the same) ...
 
     async function fetchWithRetry(prompt, retries = 3, delay = 1000) {
         // Simplified API stub for Canvas environment
@@ -351,8 +395,39 @@ document.addEventListener('DOMContentLoaded', () => {
     // Loop button listener
     loopBtn.addEventListener('click', toggleLoop);
 
-    // Playlist Toggle Listener
-    togglePlaylistBtn.addEventListener('click', togglePlaylistVisibility);
+    // REMOVED: Playlist Toggle Listener
+    // togglePlaylistBtn.addEventListener('click', togglePlaylistVisibility);
+
+    // Upload / Drop listeners
+    if (uploadBtn && fileInput) {
+        uploadBtn.addEventListener('click', () => fileInput.click());
+
+        fileInput.addEventListener('change', (e) => {
+            handleFiles(e.target.files);
+            // reset so same files can be selected again if needed
+            fileInput.value = '';
+        });
+    }
+
+    if (dropZone) {
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('drag-over');
+        });
+
+        dropZone.addEventListener('dragleave', (e) => {
+            dropZone.classList.remove('drag-over');
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('drag-over');
+            const dt = e.dataTransfer;
+            if (dt && dt.files && dt.files.length) {
+                handleFiles(dt.files);
+            }
+        });
+    }
 
     audioPlayer.addEventListener('canplay', handleReadyToPlay);
 
@@ -374,6 +449,5 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize volume
     audioPlayer.volume = volumeControl.value / 100;
 
-    // Start with the playlist visible (Desktop/Mobile initial setup)
-    togglePlaylistVisibility();
+    // REMOVED: Initial call to togglePlaylistVisibility();
 });

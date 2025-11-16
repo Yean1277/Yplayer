@@ -1,60 +1,87 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Music Player</title>
     <link rel="stylesheet" href="src/css/styles.css">
 </head>
-<body>
-<div class="music-player">
-<div class="player-left-col">
-            <div class="player-main">
-                
 
-<div class="info-container">
-                    <img id="album-art" src="https://placehold.co/150x150/E1468C/ffffff?text=Music" alt="Album Art" class="album-art">
+<body>
+    <div class="music-player">
+        <!-- Playlist container is an independent column -->
+        <div id="playlist-container">
+            <!-- Upload & Drop Zone -->
+            <div class="upload-area">
+                <div id="drop-zone" class="drop-zone">Drop audio files here or click Upload</div>
+                <div style="display:flex; gap:8px; margin-top:8px; align-items:center;">
+                    <button id="upload-btn" class="control-btn">Upload</button>
+                    <input id="file-input" type="file" accept="audio/*" multiple hidden />
+                </div>
+            </div>
+
+            <!-- Playlist items will be rendered here -->
+            <div id="playlist-items"></div>
+
+        </div>
+
+        <div class="player-left-col">
+            <div class="player-main">
+
+
+                <div class="info-container">
+                    <img id="album-art" src="https://placehold.co/150x150/E1468C/ffffff?text=Music" alt="Album Art"
+                        class="album-art">
                     <div class="song-details">
                         <h2 id="song-title">Select a Song</h2>
                         <p id="song-artist">Player</p>
 
-                        
 
-<div class="controls">
-                            
 
-<button id="prev-btn" class="control-btn">
-                                <svg viewBox="0 0 24 24"><path d="M6 6h2v12H6V6zm3.5 6l8.5 6V6L9.5 12z"></path></svg>
+                        <div class="controls">
+
+
+                            <button id="prev-btn" class="control-btn">
+                                <svg viewBox="0 0 24 24">
+                                    <path d="M6 6h2v12H6V6zm3.5 6l8.5 6V6L9.5 12z"></path>
+                                </svg>
                             </button>
 
-                            
 
-<button id="play-btn" class="control-btn play-pause-btn">
-                                <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>
+
+                            <button id="play-btn" class="control-btn play-pause-btn">
+                                <svg viewBox="0 0 24 24">
+                                    <path d="M8 5v14l11-7z"></path>
+                                </svg>
                             </button>
 
-                            
 
-<button id="pause-btn" class="control-btn play-pause-btn hidden">
-                                <svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"></path></svg>
+
+                            <button id="pause-btn" class="control-btn play-pause-btn hidden">
+                                <svg viewBox="0 0 24 24">
+                                    <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"></path>
+                                </svg>
                             </button>
 
-                            
 
-<button id="next-btn" class="control-btn">
-                                <svg viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"></path></svg>
+
+                            <button id="next-btn" class="control-btn">
+                                <svg viewBox="0 0 24 24">
+                                    <path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"></path>
+                                </svg>
                             </button>
                         </div>
                     </div>
                 </div>
 
-                
 
-<div class="progress-container">
-                    
-                    
 
-<div class="progress-bar-group">
+                <div class="progress-container">
+
+
+
+                    <div class="progress-bar-group">
                         <div class="progress-wrapper">
                             <input type="range" id="progress-bar" value="0" min="0" max="100" step="0.1">
                         </div>
@@ -64,78 +91,72 @@
                             <span id="duration">0:00</span>
                         </div>
                     </div>
-                    
 
-<div class="right-controls">
-                        
 
-<button id="loop-btn" class="control-btn loop-btn" title="Loop Mode: Off">
-                            <svg viewBox="0 0 24 24"><path d="M17 19H7v-3l-4 4 4 4v-3h12v-6h-2v4zM7 5h10V2l4 4-4 4V7H7V4H5v6h2V5z"></path></svg>
+                    <div class="right-controls">
+
+
+                        <button id="loop-btn" class="control-btn loop-btn" title="Loop Mode: Off">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M17 19H7v-3l-4 4 4 4v-3h12v-6h-2v4zM7 5h10V2l4 4-4 4V7H7V4H5v6h2V5z"></path>
+                            </svg>
                         </button>
-                        
 
-<div id="volume-area" class="volume-area">
-                            
 
-<button id="volume-icon-btn" class="control-btn" title="Volume">
-                                <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"></path></svg>
+                        <div id="volume-area" class="volume-area">
+
+
+                            <button id="volume-icon-btn" class="control-btn" title="Volume">
+                                <svg viewBox="0 0 24 24">
+                                    <path
+                                        d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z">
+                                    </path>
+                                </svg>
                             </button>
-                            
-                            
 
-<div id="volume-popup">
+
+
+                            <div id="volume-popup">
                                 <input type="range" id="volume-control" value="100" min="0" max="100" step="1">
                             </div>
                         </div>
-                        
-                        
 
-<button id="toggle-playlist-btn" class="control-btn" title="Hide Playlist">
-                            <svg viewBox="0 0 24 24"><path d="M4 10h12v2H4zm0-4h12v2H4zm0 8h8v2H4zM18 14v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4z"></path></svg>
-                        </button>
-                        
-
-<button id="ai-insight-btn" class="control-btn ai-btn" title="Get Song Insights">✨</button>
+                        <button id="ai-insight-btn" class="control-btn ai-btn" title="Get Song Insights">✨</button>
                     </div>
                 </div>
 
             </div>
 
-            
-
-<div id="playlist-container">
-                
-
-</div>
-            
         </div>
-        
 
-<div id="lyrics-container" class="lyrics-container">
+
+        <div id="lyrics-container" class="lyrics-container">
             <p id="current-lyrics-text">Select a song to see lyrics...</p>
-            
 
-<button id="deep-dive-btn" class="control-btn" title="Get Deep Lyric Analysis">✨ Get Lyric Deep Dive</button>
+
+            <button id="deep-dive-btn" class="control-btn" title="Get Deep Lyric Analysis">✨ Get Lyric Deep
+                Dive</button>
         </div>
     </div>
 
-    
 
-<audio id="audio-player"></audio>
 
-    
+    <audio id="audio-player"></audio>
 
-<div id="ai-modal" class="modal-overlay">
+
+
+    <div id="ai-modal" class="modal-overlay">
         <div class="modal-content">
             <span id="modal-close-btn" class="modal-close">&times;</span>
             <h4 id="modal-title-header"></h4>
             <div id="modal-body">
                 <div id="modal-loading" class="spinner"></div>
-                <p id="modal-content-text" style="white-space: pre-wrap; color: #333;"></p> 
+                <p id="modal-content-text" style="white-space: pre-wrap; color: #333;"></p>
             </div>
         </div>
     </div>
 
     <script src="src/js/main.js"></script>
 </body>
+
 </html>
