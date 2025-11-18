@@ -187,8 +187,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     `;
 
             item.addEventListener('click', () => {
-                loadSong(index, true);
-            });
+            loadSong(index, true);
+            savePlaylistToLocalStorage();
+        });
+
 
             playlistItems.appendChild(item);
         });
@@ -225,9 +227,43 @@ document.addEventListener('DOMContentLoaded', () => {
                 loadSong(newIndex, true);
             } else {
                 renderPlaylist();
+                savePlaylistToLocalStorage();
             }
         });
     }
+
+    // --- LocalStorage: Save Playlist ---
+    function savePlaylistToLocalStorage() {
+        const saved = playlist.map(song => ({
+        title: song.title,
+        artist: song.artist,
+        src: song.src,
+        art: song.art,
+        lyrics: song.lyrics
+    }));
+
+        localStorage.setItem('YPLAYER_PLAYLIST', JSON.stringify(saved));
+        localStorage.setItem('YPLAYER_INDEX', currentSongIndex);
+    }
+
+    // --- LocalStorage: Load Playlist ---
+    function loadPlaylistFromLocalStorage() {
+        const stored = localStorage.getItem('YPLAYER_PLAYLIST');
+        if (!stored) return;
+
+        const list = JSON.parse(stored);
+        playlist.length = 0; // Clear current playlist
+
+        list.forEach(item => playlist.push(item));
+
+        renderPlaylist();
+
+        const savedIndex = localStorage.getItem('YPLAYER_INDEX');
+        if (savedIndex !== null && playlist[savedIndex]) {
+            loadSong(parseInt(savedIndex), false);
+    }
+}
+
 
     // --- 4. Loop Feature Logic ---
     const LOOP_ICONS = {
@@ -403,12 +439,18 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // --- 8. Initialize the Player ---
+    loadPlaylistFromLocalStorage();  // <-- NEW
     renderPlaylist();
+    // If no saved playlist, load first empty song
+    if (playlist.length > 0) {
+    // playlist loaded by LocalStorage
+    } else {
     loadSong(currentSongIndex);
+    }
+    
     updateLoopButton();
+
 
     // Initialize volume
     audioPlayer.volume = volumeControl.value / 100;
-
-    // REMOVED: Initial call to togglePlaylistVisibility();
 });
