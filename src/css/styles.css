@@ -1,654 +1,251 @@
-/* --- 1. Global Reset & Body (NEW PINK THEME) --- */
+/* =============================
+   高级可爱粉 · Music Player UI
+   Style: Cute + Premium + Portfolio
+   ============================= */
+
+:root {
+  --bg: #FFF7FA;
+  --card: #FFFFFF;
+  --pink-main: #E88BB5;
+  --pink-soft: #F3C1D9;
+  --text-main: #3A2A32;
+  --text-sub: #8C6B7A;
+  --border-soft: #F1D9E4;
+  --shadow-soft: 0 12px 30px rgba(232, 139, 181, 0.18);
+}
+
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    background-color: #FEFBFD;
-    /* Very light pink background */
-    color: #4D2C3A;
-    /* Dark brownish-pink text */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    padding: 1rem;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text-main);
+  min-height: 100vh;
 }
 
-/* --- 2. Main Player Container (Wrapper for two columns) --- */
-.music-player {
-    background-color: transparent;
-    border-radius: 12px;
-    width: 100%;
-    max-width: 900px;
-    overflow: hidden;
-    box-shadow: none;
-
-    /* Mobile/Default: single column stack */
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    /* Gap between the stacked boxes on mobile */
+/* ===== App Layout ===== */
+.app {
+  display: grid;
+  grid-template-columns: 260px 360px 1fr;
+  gap: 24px;
+  padding: 32px;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
-.player-main {
-    padding: 24px;
+.card {
+  background: var(--card);
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: var(--shadow-soft);
+  border: 1px solid var(--border-soft);
 }
 
-/* Left column is the container for Player controls + Playlist */
-.player-left-col {
-    width: 100%;
-    background-color: #F9D5E5;
-    /* Light background for the box */
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    overflow: hidden;
-    border: 1px solid #EED8E0;
-    /* Soft border */
-
-    /* Stack controls and playlist vertically */
-    display: flex;
-    flex-direction: column;
+/* ===== Playlist ===== */
+.playlist h2 {
+  font-size: 18px;
+  margin-bottom: 12px;
 }
 
-/* --- 3. Album Art & Info Section --- */
-.info-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
+.playlist-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
 }
 
-.album-art {
-    width: 120px;
-    height: 120px;
-    border-radius: 8px;
-    object-fit: cover;
-    flex-shrink: 0;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    margin-bottom: 20px;
+.btn-primary {
+  background: var(--pink-main);
+  color: white;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 12px;
+  font-size: 14px;
+  cursor: pointer;
 }
 
-.song-details {
-    margin-left: 0;
-    flex-grow: 1;
-    min-width: 0;
-    width: 100%;
-}
-
-#song-title {
-    font-size: 22px;
-    font-weight: 600;
-    color: #4D2C3A;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-#song-artist {
-    font-size: 16px;
-    color: #8B6373;
-    margin-top: 4px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-/* --- 4. Controls --- */
-.controls {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    margin-top: 24px;
-    justify-content: center;
-}
-
-.control-btn {
-    background: none;
-    border: none;
-    color: #8B6373;
-    cursor: pointer;
-    padding: 8px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background-color 0.2s ease, color 0.2s ease;
-}
-
-.control-btn.active-loop {
-    color: #E1468C;
-}
-
-.control-btn svg {
-    width: 24px;
-    height: 24px;
-    fill: currentColor;
-}
-
-.control-btn:hover {
-    background-color: #FDEFF5;
-    color: #4D2C3A;
-}
-
-.play-pause-btn {
-    background-color: #E1468C;
-    color: #fff;
-    width: 48px;
-    height: 48px;
-}
-
-.play-pause-btn:hover {
-    background-color: #C93B7A;
-}
-
-/* --- 5. Progress Bar & Time --- */
-.progress-container {
-    margin-top: 24px;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-}
-
-.progress-bar-group {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-grow: 1;
-}
-
-.progress-wrapper {
-    flex-grow: 1;
-    min-width: 0;
-}
-
-.time-display-inline {
-    font-size: 12px;
-    color: #AD8A99;
-    white-space: nowrap;
-}
-
-.time-separator {
-    margin: 0 2px;
-}
-
-/* --- 6. Right Controls --- */
-.right-controls {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    flex-shrink: 0;
-    justify-content: center;
-}
-
-.ai-btn,
-.loop-btn,
-#toggle-playlist-btn {
-    font-size: 18px;
-    padding: 10px;
-    color: #AD8A99;
-    transition: color 0.2s ease, background-color 0.2s ease;
-    border-radius: 50%;
-}
-
-.ai-btn:hover,
-.loop-btn:hover,
-#toggle-playlist-btn:hover {
-    color: #4D2C3A;
-    background-color: #FDEFF5;
-}
-
-#volume-area {
-    position: relative;
-    display: flex;
-    align-items: center;
-    height: 32px;
-}
-
-#volume-icon-btn {
-    padding: 8px;
-    border-radius: 50%;
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: #AD8A99;
-    z-index: 10;
-}
-
-#volume-icon-btn:hover {
-    background-color: #FDEFF5;
-    color: #4D2C3A;
-}
-
-#volume-icon-btn svg {
-    width: 20px;
-    height: 20px;
-    fill: currentColor;
-}
-
-#volume-popup {
-    position: absolute;
-    bottom: 110%;
-    right: -10px;
-    padding: 10px 5px;
-    background-color: rgba(51, 51, 51, 0.95);
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.3s, visibility 0.3s;
-    z-index: 50;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 120px;
-    width: 40px;
-}
-
-#volume-area:hover #volume-popup,
-#volume-popup:hover {
-    opacity: 1;
-    visibility: visible;
-}
-
-/* --- 7. Custom Range Sliders --- */
-input[type="range"] {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 100%;
-    height: 6px;
-    background: #EED8E0;
-    border-radius: 3px;
-    outline: none;
-    cursor: pointer;
-}
-
-#volume-control {
-    width: 100px;
-    height: 6px;
-    transform: rotate(-90deg);
-    transform-origin: 50px 3px;
-    position: absolute;
-    left: -30px;
-    background: #f5f5f5;
-}
-
-#progress-bar {
-    width: 100%;
-    background: #EED8E0;
-}
-
-/* Thumb styles */
-input[type="range"]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 16px;
-    height: 16px;
-    background: #E1468C;
-    border-radius: 50%;
-    cursor: pointer;
-    border: 0;
-    transition: background 0.2s ease-in-out;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-}
-
-input[type="range"]::-webkit-slider-thumb:hover {
-    background: #C93B7A;
-}
-
-input[type="range"]::-moz-range-thumb {
-    width: 16px;
-    height: 16px;
-    background: #E1468C;
-    border-radius: 50%;
-    cursor: pointer;
-    border: 0;
-    transition: background 0.2s ease-in-out;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-}
-
-input[type="range"]::-moz-range-thumb:hover {
-    background: #C93B7A;
-}
-
-/* --- 8. Playlist & Lyrics Styling --- */
-
-.playlist-item {
-    display: flex;
-    align-items: center;
-    padding: 10px 15px;
-    border-bottom: 1px solid #FDEFF5;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-}
-
-.playlist-item:hover {
-    background-color: #FEFBFD;
-}
-
-.playlist-item.active {
-    background-color: #FDEFF5;
-    border-left: 4px solid #E1468C;
-    padding-left: 11px;
-}
-
-.playlist-item .song-title-pl {
-    font-weight: 600;
-    color: #4D2C3A;
-    font-size: 15px;
-}
-
-.playlist-item .song-artist-pl {
-    color: #AD8A99;
-    font-size: 13px;
-    margin-top: 2px;
-}
-
-#playlist-container {
-    padding: 16px;
-    max-height: 200px;
-    /* Mobile size */
-    overflow-y: auto;
-    scrollbar-width: thin;
-    scrollbar-color: #EED8E0 #FDEFF5;
-    /* Soft boxed style so playlist looks like its own card */
-    background-color: #FEFBFD;
-    border: 1px solid #EED8E0;
-    border-radius: 12px;
-}
-
-/* Upload / drop area styles */
-.upload-area {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    margin-bottom: 12px;
+.btn-primary:hover {
+  background: #d97aa7;
 }
 
 .drop-zone {
-    border: 2px dashed #EED8E0;
-    border-radius: 8px;
-    padding: 12px;
-    text-align: center;
-    color: #8B6373;
-    background: rgba(255,255,255,0.6);
+  border: 2px dashed var(--border-soft);
+  border-radius: 14px;
+  padding: 14px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-sub);
+  margin-bottom: 14px;
 }
 
-.drop-zone.drag-over {
-    background: #FDEFF5;
-    border-color: #E1468C;
-    color: #4D2C3A;
+.playlist-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
-#upload-btn.control-btn {
-    align-self: flex-start;
-    padding: 8px 12px;
-    border-radius: 8px;
-    background-color: #E1468C;
-    color: #fff;
+.playlist-item {
+  padding: 10px 12px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
 }
 
-#playlist-items {
-    display: block;
+.playlist-item:hover {
+  background: #FFF0F6;
+  transform: translateY(-1px);
 }
 
-.lyrics-container {
-    max-height: 300px;
-    overflow-y: auto;
-    padding: 24px;
-    font-size: 16px;
-    line-height: 1.6;
-    color: #8B6373;
-    white-space: pre-wrap;
-    text-align: center;
-    scrollbar-width: thin;
-    scrollbar-color: #EED8E0 #FDEFF5;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-
-    /* Minimal styling for lyrics: remove boxed appearance so it blends with player */
-    background-color: transparent;
-    border: none;
-    border-radius: 0;
-    box-shadow: none;
+.playlist-item.active {
+  background: #FFE4F0;
+  border-left: 4px solid var(--pink-main);
 }
 
-#deep-dive-btn {
-    background-color: #FDEFF5;
-    border: 1px solid #EED8E0;
-    color: #4D2C3A;
-    font-size: 14px;
-    padding: 8px 15px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.2s;
-    width: fit-content;
-    margin: 0 auto;
+.song-title-pl {
+  font-size: 14px;
+  font-weight: 600;
 }
 
-#deep-dive-btn:hover {
-    background-color: #EED8E0;
+.song-artist-pl {
+  font-size: 12px;
+  color: var(--text-sub);
 }
 
-/* --- 9. Desktop / wide-screen layout: move playlist to left of the player --- */
-@media (min-width: 800px) {
-    .music-player {
-        /* switch to row layout on wide screens */
-        flex-direction: row;
-        gap: 20px;
-        align-items: flex-start;
-        max-width: 1200px;
-    }
-
-    /* Left area contains playlist as a separate column; player sits center-left */
-    .player-left-col {
-        display: flex;
-        flex-direction: column;
-        width: 44%;
-        min-height: 320px;
-        background-color: #F9D5E5;
-        border-radius: 12px;
-        overflow: hidden;
-        border: 1px solid #EED8E0;
-    }
-
-    /* Playlist is its own left column */
-    #playlist-container {
-        width: 28%;
-        padding: 12px;
-        max-height: calc(100vh - 160px);
-        overflow-y: auto;
-        background: #FEFBFD;
-    }
-
-    /* Player controls area occupies remaining space inside player-left-col */
-    .player-main {
-        width: 100%;
-        padding: 24px;
-    }
-
-    /* Place the lyrics to the right as a slim column (optional) */
-    .lyrics-container {
-        width: 28%;
-        max-height: calc(100vh - 160px);
-        overflow-y: auto;
-        padding: 24px;
-        text-align: left;
-    }
-
-    /* Slight visual tweak for playlist items on desktop */
-    .playlist-item {
-        padding: 12px 10px;
-    }
+/* ===== Player ===== */
+.player {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
-#current-lyrics-text {
-    text-align: left;
-    margin-top: 5px;
-    flex-grow: 1;
-    color: #4D2C3A;
+.player-top {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 16px;
 }
 
-/* Scrollbar styles for both list and lyrics */
-#playlist-container::-webkit-scrollbar,
-.lyrics-container::-webkit-scrollbar {
-    width: 8px;
+.album-art {
+  width: 220px;
+  height: 220px;
+  border-radius: 18px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.25);
 }
 
-#playlist-container::-webkit-scrollbar-track,
-.lyrics-container::-webkit-scrollbar-track {
-    background: #FDEFF5;
-    border-radius: 4px;
+.song-meta h1 {
+  font-size: 20px;
 }
 
-#playlist-container::-webkit-scrollbar-thumb,
-.lyrics-container::-webkit-scrollbar-thumb {
-    background: #EED8E0;
-    border-radius: 4px;
+.song-meta p {
+  font-size: 14px;
+  color: var(--text-sub);
 }
 
-#playlist-container::-webkit-scrollbar-thumb:hover,
-.lyrics-container::-webkit-scrollbar-thumb:hover {
-    background: #E5C9D5;
+/* ===== Controls ===== */
+.player-controls {
+  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
-/* --- 9. AI Feature & Modal --- */
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: none;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
+.controls-main {
+  display: flex;
+  justify-content: center;
+  gap: 18px;
 }
 
-.modal-content {
-    background-color: #fff;
-    padding: 30px;
-    border-radius: 12px;
-    width: 90%;
-    max-width: 450px;
-    position: relative;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
-    text-align: left;
-    color: #262626;
+.icon-btn {
+  border: none;
+  background: #FFF0F6;
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  font-size: 18px;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s, background 0.15s;
 }
 
-.modal-content h4 {
-    font-size: 20px;
-    font-weight: 600;
-    color: #262626;
-    margin-bottom: 15px;
-    display: flex;
-    align-items: center;
+.icon-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(232,139,181,0.35);
 }
 
-.modal-close {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    font-size: 24px;
-    font-weight: 300;
-    cursor: pointer;
-    color: #8e8e8e;
-    transition: color 0.2s;
+/* 主播放按钮（C：圆形 + 微动画） */
+.icon-btn.play {
+  width: 56px;
+  height: 56px;
+  background: linear-gradient(135deg, var(--pink-main), var(--pink-soft));
+  color: white;
+  box-shadow: 0 10px 25px rgba(232,139,181,0.55);
 }
 
-.modal-close:hover {
-    color: #262626;
+.icon-btn.play:hover {
+  transform: scale(1.08);
 }
 
-.spinner {
-    border: 4px solid rgba(0, 0, 0, 0.1);
-    border-left-color: #E1468C;
-    border-radius: 50%;
-    width: 24px;
-    height: 24px;
-    animation: spin 1s linear infinite;
-    margin: 20px auto;
+.controls-secondary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
-@keyframes spin {
-    to {
-        transform: rotate(360deg);
-    }
+.icon-btn.small {
+  width: 36px;
+  height: 36px;
+  font-size: 14px;
 }
 
-/* --- 10. Utility & Media Query --- */
+/* ===== Progress ===== */
+.progress-area {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--text-sub);
+}
+
+input[type="range"] {
+  flex: 1;
+  appearance: none;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--border-soft);
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--pink-main);
+  cursor: pointer;
+}
+
+/* ===== Lyrics ===== */
+.lyrics h2 {
+  margin-bottom: 12px;
+}
+
+.lyrics-text {
+  font-size: 18px;
+  line-height: 1.8;
+  white-space: pre-wrap;
+}
+
+/* ===== Utility ===== */
 .hidden {
-    display: none !important;
+  display: none !important;
 }
 
-@media (max-width: 768px) {
-
-    /* Mobile adjustments: Stacked boxes, full width */
-    .music-player {
-        gap: 12px;
-    }
-
-    .lyrics-container {
-        max-height: 250px;
-    }
-
-    #playlist-container {
-        max-height: 300px;
-    }
-
-    .player-left-col {
-        border-radius: 12px;
-    }
-}
-
-/* --- 11. Desktop Layout (BOX SEPARATION) --- */
-@media (min-width: 769px) {
-
-    .music-player {
-        max-width: 950px;
-        display: flex;
-        flex-direction: row;
-        /* Side by side */
-        gap: 20px;
-        /* Space between the two boxes */
-        height: 520px;
-        /* Fixed wrapper height to align boxes */
-    }
-
-    /* LEFT BOX (Playlist) */
-    #playlist-container {
-        /* CHANGED: From 300px to 340px */
-        flex-basis: 340px; 
-        flex-shrink: 0;
-        height: 100%;
-        max-height: none;
-        /* ENSURE visibility is not overridden by mobile styles */
-        display: block !important; 
-    }
-
-    /* MIDDLE BOX (Player) */
-    .player-left-col {
-        /* Adjusted basis to accommodate wider playlist */
-        flex-basis: 320px; 
-        flex-shrink: 0;
-        transition: flex-basis 0.3s ease;
-        height: 100%;
-    }
-
-    /* RIGHT BOX (Lyrics) - Always takes remaining space */
-    .lyrics-container {
-        flex-grow: 1;
-        flex-basis: 400px;
-        max-height: none;
-        height: 100%;
-        display: flex;
-    }
+/* ===== Responsive ===== */
+@media (max-width: 900px) {
+  .app {
+    grid-template-columns: 1fr;
+  }
 }

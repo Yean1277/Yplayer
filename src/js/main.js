@@ -62,15 +62,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // const togglePlaylistBtn = document.getElementById('toggle-playlist-btn');
     const musicPlayer = document.querySelector('.music-player');
 
-    // AI Modal Elements
-    const aiInsightBtn = document.getElementById('ai-insight-btn');
-    const deepDiveBtn = document.getElementById('deep-dive-btn');
-    const modalOverlay = document.getElementById('ai-modal');
-    const modalCloseBtn = document.getElementById('modal-close-btn');
-    const modalTitleHeader = document.getElementById('modal-title-header');
-    const modalContentText = document.getElementById('modal-content-text');
-    const modalLoading = document.getElementById('modal-loading');
-
     const handleReadyToPlay = () => {
         if (shouldPlayOnReady) {
             playSong();
@@ -80,6 +71,36 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // --- 3. Define Core Functions ---
+    function extractAverageColor(img) {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+
+        const size = 40;
+        canvas.width = size;
+        canvas.height = size;
+
+        ctx.drawImage(img, 0, 0, size, size);
+
+        const imageData = ctx.getImageData(0, 0, size, size).data;
+        let r = 0, g = 0, b = 0;
+
+        for (let i = 0; i < imageData.length; i += 4) {
+            r += imageData[i];
+            g += imageData[i + 1];
+            b += imageData[i + 2];
+        }
+
+        const count = imageData.length / 4;
+        r = Math.round(r / count);
+        g = Math.round(g / count);
+        b = Math.round(b / count);
+
+        return `rgb(${r}, ${g}, ${b})`;
+    }
+
+    function applyAlbumColor(color) {
+        document.documentElement.style.setProperty('--pink-main', color);
+    }
 
     function loadSong(index, startPlayback = false) {
         const song = playlist[index];
@@ -88,18 +109,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
         audioPlayer.src = song.src;
         albumArt.src = song.art;
+        albumArt.onload = () => {
+            try {
+                const avgColor = extractAverageColor(albumArt);
+                applyAlbumColor(avgColor);
+            } catch (err) {
+                console.warn('Extract color failed', err);
+            }
+        };
         songTitle.textContent = song.title;
         songArtist.textContent = song.artist;
         currentSongIndex = index;
         progressBar.value = 0;
         updateActivePlaylistItem(index);
 
-        // Update lyrics, disable deep dive button if no valid lyrics
-        currentLyricsText.textContent = song.lyrics;
-        const isDisabled = song.lyrics.includes('No lyrics available');
-        deepDiveBtn.disabled = isDisabled;
-        deepDiveBtn.style.opacity = isDisabled ? '0.5' : '1';
-        deepDiveBtn.style.cursor = isDisabled ? 'not-allowed' : 'pointer';
     }
 
     function updateActivePlaylistItem(index) {
@@ -187,9 +210,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     `;
 
             item.addEventListener('click', () => {
-            loadSong(index, true);
-            savePlaylistToLocalStorage();
-        });
+                loadSong(index, true);
+                savePlaylistToLocalStorage();
+            });
 
 
             playlistItems.appendChild(item);
@@ -235,12 +258,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- LocalStorage: Save Playlist ---
     function savePlaylistToLocalStorage() {
         const saved = playlist.map(song => ({
-        title: song.title,
-        artist: song.artist,
-        src: song.src,
-        art: song.art,
-        lyrics: song.lyrics
-    }));
+            title: song.title,
+            artist: song.artist,
+            src: song.src,
+            art: song.art,
+            lyrics: song.lyrics
+        }));
 
         localStorage.setItem('YPLAYER_PLAYLIST', JSON.stringify(saved));
         localStorage.setItem('YPLAYER_INDEX', currentSongIndex);
@@ -261,8 +284,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const savedIndex = localStorage.getItem('YPLAYER_INDEX');
         if (savedIndex !== null && playlist[savedIndex]) {
             loadSong(parseInt(savedIndex), false);
+        }
     }
-}
 
 
     // --- 4. Loop Feature Logic ---
@@ -318,62 +341,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- 6. Gemini API Functions (Stub) ---
     // ... (rest of the functions remain the same) ...
 
-    async function fetchWithRetry(prompt, retries = 3, delay = 1000) {
-        // Simplified API stub for Canvas environment
-        modalContentText.textContent = 'Simulating AI analysis. This typically takes a few seconds...';
-        await new Promise(resolve => setTimeout(resolve, 1500));
-
-        // Simulate a relevant response based on the prompt
-        if (prompt.includes('Deep Dive')) {
-            return "Lyric Deep Dive:\n\nThe core theme is **pure, simple joy** derived from the act of listening to music. Phrases like 'Music is the key' and 'SoundHelix, take me away' suggest an escapist, uplifting mood. The repetition in the chorus reinforces the song's primary function: to create a feel-good, easy-listening experience. It's designed to be a motivational anthem.";
-        } else {
-            return "Simulated Song Insight: The artist, T. Schürger, is known for generating royalty-free digital music for use in various media. If you like this sound, you might enjoy music in the Electro Swing genre, such as tracks by Caravan Palace.";
-        }
-    }
-
-    async function showAiModal(mode) {
-        const song = playlist[currentSongIndex];
-
-        modalOverlay.style.display = 'flex';
-        modalLoading.style.display = 'block';
-        modalContentText.style.display = 'none';
-        modalContentText.textContent = '';
-
-        let prompt;
-
-        if (mode === 'insight') {
-            modalTitleHeader.textContent = '✨ Song Insights';
-            prompt = `I'm listening to the song '${song.title}' by the artist '${song.artist}'. Give me one interesting fact about the artist OR suggest one similar song I might like. Keep the response to 1-2 concise sentences.`;
-        } else if (mode === 'deep-dive') {
-            if (song.lyrics.includes('No lyrics available')) {
-                modalLoading.style.display = 'none';
-                modalContentText.textContent = `Lyric Deep Dive requires lyrics. Please select a song other than '${song.title}'.`;
-                modalContentText.style.display = 'block';
-                modalTitleHeader.textContent = '✨ Lyric Deep Dive (Error)';
-                return;
-            }
-            modalTitleHeader.textContent = '✨ Lyric Deep Dive';
-            prompt = `Analyze the lyrics for the song '${song.title}' by the artist '${song.artist}'. Based on the following lyrics, provide a brief (3-4 sentence) analysis of the main theme, the mood, and the likely meaning behind the song.
-                    
-                    Lyrics: """${song.lyrics}"""`;
-        } else {
-            return;
-        }
-
-        try {
-            const result = await fetchWithRetry(prompt);
-            modalContentText.textContent = result;
-        } catch (error) {
-            modalContentText.textContent = 'Sorry, I couldn\'t get insights right now. Please check your network or try again later.';
-        }
-
-        modalLoading.style.display = 'none';
-        modalContentText.style.display = 'block';
-    }
-
-    function hideAiModal() {
-        modalOverlay.style.display = 'none';
-    }
 
     // --- 7. Add Event Listeners ---
     playBtn.addEventListener('click', playSong);
@@ -428,26 +395,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     audioPlayer.addEventListener('canplay', handleReadyToPlay);
 
-    // AI Modal Listeners
-    aiInsightBtn.addEventListener('click', () => showAiModal('insight'));
-    deepDiveBtn.addEventListener('click', () => showAiModal('deep-dive'));
-    modalCloseBtn.addEventListener('click', hideAiModal);
-    modalOverlay.addEventListener('click', (e) => {
-        if (e.target === modalOverlay) {
-            hideAiModal();
-        }
-    });
 
     // --- 8. Initialize the Player ---
     loadPlaylistFromLocalStorage();  // <-- NEW
     renderPlaylist();
     // If no saved playlist, load first empty song
     if (playlist.length > 0) {
-    // playlist loaded by LocalStorage
+        // playlist loaded by LocalStorage
     } else {
-    loadSong(currentSongIndex);
+        loadSong(currentSongIndex);
     }
-    
+
     updateLoopButton();
 
 
